@@ -13,6 +13,7 @@ import OnlineUsersStore from "./store/onlineUsersStore";
 import { WebSocketContext } from "@/providers/WebSocketProvider";
 import HomeLoading from "@/components/HomeLoading";
 import ImageModal from "@/components/messages/modal/ImageModal";
+import MSkeleton from "@/components/messages/MSkeleton";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -80,16 +81,26 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full">
       <div className="grid w-full h-full grid-cols-1 md:grid-cols-8 md:p-0">
-        <div className="lg:p-0 lg:col-span-2 sm:col-span-3 hidden md:block">
+        <div
+          className={`p-2 ${
+            conversationId ? "hidden" : ""
+          } lg:p-0 lg:col-span-2 sm:col-span-3  md:block`}
+        >
           <Conversations user={user} />
         </div>
-        <div className="md:col-span-5 lg:col-span-6 md:border-l md:border-l-gray-300">
+        <div
+          className={`md:col-span-5 lg:col-span-6 ${
+            conversationId ? "" : "hidden"
+          }  md:block md:border-l md:border-l-gray-300`}
+        >
           {conversation ? (
             <Messages
               isMessagesLoading={isMessagesLoading}
               user={user}
               conversation={conversation}
             />
+          ) : conversationId ? (
+            <MSkeleton />
           ) : (
             <div className="flex items-center flex-col justify-center min-h-screen w-full">
               <div className="text-slate-500">
@@ -106,7 +117,7 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <span className="text-xl font-semibold text-slate-500">
+              <span className="text-lg md:text-xl text-center  font-semibold text-slate-500">
                 Click & Start a Conversation - Anytime,Anywhere
               </span>
             </div>

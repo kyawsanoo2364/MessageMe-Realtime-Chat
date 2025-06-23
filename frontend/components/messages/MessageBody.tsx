@@ -342,7 +342,7 @@ const MessageBody: React.FC<MessageBodyProps> = ({
           isEdit || isReply
             ? "min-h-[60vh] max-h-[60vh] lg:min-h-[58vh] lg:max-h-[58vh]"
             : "lg:min-h-[70vh] lg:max-h-[70vh] min-h-[74vh] max-h-[74vh]"
-        }    overflow-y-auto`}
+        }    overflow-y-auto overflow-x-hidden`}
         ref={divRef}
       >
         {isMessagesLoading ? (

@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import { getAxiosInstance } from "@/axiosInstance";
 import conversationsStore from "@/app/store/conversationsStore";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { MoveLeftIcon } from "lucide-react";
 
 interface MessageHeaderProps {
   userId: string | undefined;
@@ -50,6 +52,11 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
   return (
     <div className="w-full h-[60px] lg:h-[80px] flex items-center justify-between border-b border-b-gray-200  lg:px-6">
       <div className="flex flex-row gap-4 items-center w-full relative p-2 px-4 lg:p-4 lg:px-0">
+        <div className="md:hidden block px-2">
+          <Link href={"/"} className="text-slate-500">
+            <MoveLeftIcon />
+          </Link>
+        </div>
         <div className="relative h-10 w-10">
           <img
             className="size-full object-cover rounded-full"

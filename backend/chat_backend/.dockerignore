@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.envrc
+
+# Django stuff:
+*.sqlite3
+*.log
+media/
+staticfiles/
+
+# macOS and IDEs
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Git
+.git
+.gitignore

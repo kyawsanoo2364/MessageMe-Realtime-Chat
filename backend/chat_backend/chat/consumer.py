@@ -8,10 +8,12 @@ from urllib.parse import urlparse
 from django.core.files import File
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
-from .models import Message, Conversation, MessageReaction
+
+# from .models import Message, Conversation, MessageReaction
 import redis.asyncio as redis
 from channels.db import database_sync_to_async
 from .serializers import MessageReactionSerializer, MessageSerializer
+from django.apps import apps
 
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
@@ -48,7 +50,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         new_message = text_data_json.get("new_message")
         reply_to = text_data_json.get("reply_to")
         receiver_user_id = text_data_json.get("receiver_user_id")
-
+        Message = self._get_message_model()
+        Conversation = self._get_conversation_model()
+        MessageReaction = self._get_message_reaction_model()
         if type == "chat_message":
             m = await self.save_message(conversation_id, message)
 
@@ -88,6 +92,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             )
 
         elif type == "reply_message":
+
             photo_url = text_data_json.get("photo_url")
             m = await database_sync_to_async(Message.objects.get)(pk=reply_to)
             conversation = await database_sync_to_async(Conversation.objects.get)(
@@ -131,7 +136,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             await self.handle_join_conversation(text_data_json)
 
     async def handle_forward_photo_message(self, data):
-
+        Conversation = self._get_conversation_model()
+        Message = self._get_message_model()
         conversation_id = data.get("conversation_id")
         photo_url = data.get("photo_url")
         try:
@@ -233,11 +239,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def delete_message_by_id(self, message_id):
+        Message = self._get_message_model()
         return Message.objects.get(pk=message_id).delete()
 
     @sync_to_async
     def save_message(self, conversation_id, message):
         user = self.scope["user"]
+        Conversation = self._get_conversation_model()
+        Message = self._get_message_model()
         conversation = Conversation.objects.get(pk=conversation_id)
         return Message.objects.create(
             body=message, conversation=conversation, created_by=user
@@ -251,6 +260,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         message_id = data.get("message_id", "")
         conversation_id = data.get("conversation_id", "")
         react = data.get("react", "")
+        Message = self._get_message_model()
+        MessageReaction = self._get_message_reaction_model()
 
         try:
             message = await database_sync_to_async(Message.objects.get)(pk=message_id)
@@ -323,6 +334,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
     async def handle_seen_message(self, data):
         message_ids = data.get("message_ids", [])
+        Message = self._get_message_model()
         conversation_id = data.get("conversation_id")
         for message_id in message_ids:
             try:
@@ -356,6 +368,15 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             group_name = f"chat_{conversation.id}"
             await self.channel_layer.group_add(group_name, self.channel_name)
 
+    def _get_message_model(self):
+        return apps.get_model("chat", "Message")
+
+    def _get_conversation_model(self):
+        return apps.get_model("chat", "Conversation")
+
+    def _get_message_reaction_model(self):
+        return apps.get_model("chat", "MessageReaction")
+
     @sync_to_async
     def update_reaction(self, reaction, new_react):
         reaction.react = new_react
@@ -371,7 +392,7 @@ class PresenceConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = self.scope["user"]
-        self.redis = await redis.from_url("redis://localhost:6379")
+        self.redis = await redis.from_url("redis://redis:6379")
         await self.accept()
 
         await self.make_user_online()
