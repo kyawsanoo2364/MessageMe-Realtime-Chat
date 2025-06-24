@@ -18,26 +18,10 @@ cd backend
 
 Make a `.env` file in the root of the backend folder. Use the structure from the provided `env.example` as a reference.
 
-#### 3. Activate virtual environment & start Docker
+#### 3. start Docker
 
 ```bash
-source venv/bin/activate
 docker compose up --build
-```
-
-#### 4. Install dependencies & run database migrations
-
-```bash
-cd chat_backend
-pip install -r requirements.txt
-python manage.py makemigrations
-python manage.py migrate
-```
-
-#### 5. Run the backend server
-
-```bash
-python manage.py runserver
 ```
 
 ---
