@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         port: "8000",
       },
+      {
+        protocol: "https",
+        hostname: "messageme-realtime-chat.onrender.com",
+        pathname: "/media/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8999",
+      },
     ],
   },
 };

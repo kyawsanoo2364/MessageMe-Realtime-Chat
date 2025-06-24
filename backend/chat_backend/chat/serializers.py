@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Conversation, Message, MessageReaction
 from useraccount.serializers import UserDetailsSerializer
+from django.conf import settings
 
 
 class MessageReactionSerializer(serializers.ModelSerializer):
@@ -50,7 +51,7 @@ class MessageSerializer(serializers.ModelSerializer):
     def get_photo_url(self, obj):
         request = self.context.get("request")
         if obj.photo and request:
-            return request.build_absolute_uri(obj.photo.url)
+            return settings.MEDIA_SERVE_URL + obj.photo.url
         return None
 
 

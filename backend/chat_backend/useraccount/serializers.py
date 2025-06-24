@@ -1,6 +1,7 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from .models import User
+from django.conf import settings
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -32,4 +33,4 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     def get_avatar_url(self, obj):
         request = self.context.get("request")
         if obj.avatar and request:
-            return request.build_absolute_uri(obj.avatar.url)
+            return settings.MEDIA_SERVE_URL + obj.avatar.url
