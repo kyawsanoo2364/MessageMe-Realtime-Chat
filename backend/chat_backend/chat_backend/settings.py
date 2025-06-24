@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-vyw2)vngzs*9bz#kt)tebg3*=j7c=7a4oyj3c1@tp!5*4hjl5u"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "1"
 
 ALLOWED_HOSTS = []
 
@@ -181,7 +181,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://localhost:3000"]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(" ")
 
 ASGI_APPLICATION = "chat_backend.asgi.application"
 
