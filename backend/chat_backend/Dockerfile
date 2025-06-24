@@ -13,3 +13,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
+
+EXPOSE 8000
+
+CMD python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 chat_backend.asgi:application
