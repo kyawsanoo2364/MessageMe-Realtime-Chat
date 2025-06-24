@@ -13,6 +13,7 @@ from .serializers import (
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.core.files.base import ContentFile
+from django.conf import settings
 
 
 @api_view(["POST"])
@@ -90,7 +91,7 @@ def create_message(request):
 
 @api_view(["GET"])
 def get_online_users_list(request):
-    r = redis.Redis()
+    r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
     keys = r.keys("presence:user:*")
     user_ids = [(k.decode().split(":")[2]) for k in keys]
     return JsonResponse(user_ids, safe=False)

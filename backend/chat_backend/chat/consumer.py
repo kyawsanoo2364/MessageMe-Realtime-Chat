@@ -14,6 +14,7 @@ import redis.asyncio as redis
 from channels.db import database_sync_to_async
 from .serializers import MessageReactionSerializer, MessageSerializer
 from django.apps import apps
+from django.conf import settings
 
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
@@ -392,7 +393,8 @@ class PresenceConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = self.scope["user"]
-        self.redis = await redis.from_url("redis://redis:6379")
+        redis_Url = settings.REDIS_URL
+        self.redis = await redis.from_url(redis_Url, decode_responses=True)
         await self.accept()
 
         await self.make_user_online()

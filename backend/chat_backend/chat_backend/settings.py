@@ -185,10 +185,13 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://localhost:3000"]
 
 ASGI_APPLICATION = "chat_backend.asgi.application"
 
+REDIS_HOST = os.getenv("REDIS_HOST")
+REDIS_PORT = os.getenv("REDIS_PORT")
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [("redis", 6379)]},
+        "CONFIG": {"hosts": [(REDIS_HOST, REDIS_PORT)]},
     },
 }
 
@@ -198,6 +201,7 @@ GOOGLE_OAUTH_CLIENT_SECRET = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")
 GOOGLE_OAUTH_CALLBACK_URL = os.getenv("GOOGLE_OAUTH_CALLBACK_URL")
 
 CURRENT_DOMAIN = "http://localhost:8000"
+
 
 # django-allauth (social)
 # Authenticate if local account with this email address already exists
