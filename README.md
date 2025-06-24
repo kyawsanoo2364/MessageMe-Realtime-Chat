@@ -111,7 +111,9 @@ This project is open source and available for personal and educational use.
 
 ## 📸 Demo Screenshots (Optional)
 
+![Chat UI](./sceenshots/login.png)
 ![Chat UI](./sceenshots/screenshot_ui.png)
+![Chat UI](./sceenshots/side-by-side.png)
 
 ---
 
